@@ -10,7 +10,7 @@ class SearchPage extends StatefulWidget {
   State<SearchPage> createState() => _SearchPageState();
 }
 
-class _SearchPageState extends ModularState<SearchPage, SearchController> {
+class _SearchPageState extends StateController<SearchPage, SearchController> {
   @override
   Widget build(BuildContext context) {
     return const Scaffold(

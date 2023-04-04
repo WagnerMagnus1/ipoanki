@@ -1,7 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
-abstract class ModularState<TWidget extends StatefulWidget,
+abstract class StateController<TWidget extends StatefulWidget,
     TBind extends Object> extends State<TWidget> {
   final TBind _scope = Modular.get<TBind>();
 
