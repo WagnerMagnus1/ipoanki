@@ -2,6 +2,7 @@ import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../../../../../common/helpers/assets_path_helper.dart';
 import '../../../../../common/theme/app_colors.dart';
 import '../../../../../common/theme/text_styles.dart';
 import '../../../../../common/widgets/state_controller.dart';
@@ -38,7 +39,11 @@ class SplashscreenPageState
   Future init() async {
     await Future.delayed(const Duration(milliseconds: 2500));
     await animationController.forward();
-    controller.navigateToSearch();
+    Future.wait([
+      precacheImage(const AssetImage(AssetsPathHelper.castleImage), context),
+    ]).then((value) {
+      controller.navigateToSearch();
+    });
   }
 
   @override

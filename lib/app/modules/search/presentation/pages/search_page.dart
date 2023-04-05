@@ -1,9 +1,7 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:ipoanki/app/common/theme/app_colors.dart';
-import 'package:ipoanki/app/modules/search/presentation/pages/search_controller.dart';
+import '../../../../common/theme/app_colors.dart';
+import 'search_controller.dart';
 
 import '../../../../common/helpers/assets_path_helper.dart';
 import '../../../../common/widgets/state_controller.dart';
@@ -40,10 +38,13 @@ class _SearchPageState extends StateController<SearchPage, SearchController> {
           Stack(
             alignment: Alignment.topCenter,
             children: [
-              Image.asset(AssetsPathHelper.castleImage),
+              Image.asset(
+                AssetsPathHelper.castleImage,
+                gaplessPlayback: true,
+              ),
               Padding(
-                padding:
-                    EdgeInsets.only(top: MediaQuery.of(context).padding.top),
+                padding: EdgeInsets.only(
+                    top: MediaQuery.of(context).padding.top * 1.2),
                 child: Column(
                   children: [
                     Row(
