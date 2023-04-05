@@ -1,6 +1,11 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:ipoanki/app/common/theme/app_colors.dart';
 import 'package:ipoanki/app/modules/search/presentation/pages/search_controller.dart';
 
+import '../../../../common/helpers/assets_path_helper.dart';
 import '../../../../common/widgets/state_controller.dart';
 
 class SearchPage extends StatefulWidget {
@@ -11,10 +16,139 @@ class SearchPage extends StatefulWidget {
 }
 
 class _SearchPageState extends StateController<SearchPage, SearchController> {
+  late TextEditingController textController;
+  final FocusNode focusNode = FocusNode();
+
+  @override
+  void initState() {
+    super.initState();
+    textController = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    textController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(child: Text('SearchBar')),
+    return Scaffold(
+      backgroundColor: AppColors.primaryColor,
+      body: Column(
+        children: [
+          Stack(
+            alignment: Alignment.topCenter,
+            children: [
+              Image.asset(AssetsPathHelper.castleImage),
+              Padding(
+                padding:
+                    EdgeInsets.only(top: MediaQuery.of(context).padding.top),
+                child: Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          'Ipoanki',
+                          textAlign: TextAlign.center,
+                          style: GoogleFonts.kanit(
+                              color: AppColors.light, fontSize: 20),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 15),
+                    FractionallySizedBox(
+                      widthFactor: 0.88,
+                      child: Container(
+                        decoration: BoxDecoration(
+                          border: Border.all(),
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(10)),
+                          color: AppColors.primaryColor,
+                        ),
+                        child: TextField(
+                          controller: textController,
+                          focusNode: focusNode,
+                          onTapOutside: (_) => focusNode.unfocus(),
+                          style: const TextStyle(color: AppColors.dark),
+                          decoration: const InputDecoration(
+                            prefixIcon: Icon(
+                              Icons.search,
+                              color: AppColors.gray,
+                            ),
+                            suffixIcon: Icon(
+                              Icons.cancel,
+                              color: AppColors.gray,
+                            ),
+                            hintStyle: TextStyle(
+                              color: AppColors.gray,
+                            ),
+                            border: OutlineInputBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(10))),
+                            hintText: 'Search',
+                            focusedBorder: OutlineInputBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(10)),
+                                borderSide: BorderSide(color: AppColors.gray)),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 50),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Your English is',
+                      style: GoogleFonts.judson(
+                          color: AppColors.gray1, fontSize: 12),
+                    ),
+                    const SizedBox(height: 5),
+                    Text(
+                      'Loading...',
+                      style: GoogleFonts.akshar(
+                          color: AppColors.gray1,
+                          fontSize: 32,
+                          letterSpacing: 1.6,
+                          shadows: [
+                            Shadow(
+                                color: AppColors.dark0.withOpacity(0.25),
+                                blurRadius: 4,
+                                offset: const Offset(0, 4))
+                          ]),
+                    ),
+                    const SizedBox(height: 10),
+                    Text(
+                      'AMAZING',
+                      style: GoogleFonts.judson(
+                          color: AppColors.gray1, fontSize: 12),
+                    ),
+                  ],
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 5),
+                  child: Image.asset(
+                    AssetsPathHelper.tribe,
+                    scale: 1.7,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
