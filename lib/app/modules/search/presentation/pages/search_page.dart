@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../../../common/theme/app_colors.dart';
@@ -18,6 +16,7 @@ class SearchPage extends StatefulWidget {
 class _SearchPageState extends StateController<SearchPage, SearchController> {
   late TextEditingController textController;
   final FocusNode focusNode = FocusNode();
+  final ScrollController scrollController = ScrollController();
 
   @override
   void initState() {
@@ -34,128 +33,165 @@ class _SearchPageState extends StateController<SearchPage, SearchController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.primaryColor,
-      body: Column(
-        children: [
-          Stack(
-            alignment: Alignment.topCenter,
+        extendBodyBehindAppBar: true,
+        appBar: AppBar(
+          elevation: 0,
+          backgroundColor: AppColors.transparent,
+          toolbarHeight: 110,
+          title: Stack(
             children: [
-              Image.asset(
-                AssetsPathHelper.castleImage,
-                gaplessPlayback: true,
-              ),
-              Padding(
-                padding: EdgeInsets.only(
-                    top: MediaQuery.of(context).padding.top * 1.2),
-                child: Column(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          'Ipoanki',
-                          textAlign: TextAlign.center,
-                          style: GoogleFonts.kanit(
-                              color: AppColors.light, fontSize: 20),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 15),
-                    FractionallySizedBox(
-                      widthFactor: 0.88,
-                      child: Container(
-                        decoration: BoxDecoration(
-                          border: Border.all(),
-                          borderRadius:
-                              const BorderRadius.all(Radius.circular(10)),
-                          color: AppColors.primaryColor,
-                        ),
-                        child: TextField(
-                          controller: textController,
-                          focusNode: focusNode,
-                          onTapOutside: (_) => focusNode.unfocus(),
-                          style: const TextStyle(color: AppColors.dark),
-                          decoration: const InputDecoration(
-                            prefixIcon: Icon(
-                              Icons.search,
-                              color: AppColors.gray,
-                            ),
-                            suffixIcon: Icon(
-                              Icons.cancel,
-                              color: AppColors.gray,
-                            ),
-                            hintStyle: TextStyle(
-                              color: AppColors.gray,
-                            ),
-                            border: OutlineInputBorder(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(10)),
-                                borderSide: BorderSide.none),
-                            hintText: 'Search',
-                            focusColor: AppColors.dark0,
-                            focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(10),
+              Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        'Ipoanki',
+                        textAlign: TextAlign.center,
+                        style: GoogleFonts.kanit(
+                            color: AppColors.light, fontSize: 20),
+                      ),
+                    ],
+                  ),
+                  Column(
+                    children: [
+                      const SizedBox(height: 15),
+                      FractionallySizedBox(
+                        widthFactor: 0.88,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            border: Border.all(),
+                            borderRadius:
+                                const BorderRadius.all(Radius.circular(10)),
+                            color: AppColors.primaryColor,
+                          ),
+                          child: TextField(
+                            onTap: () {
+                              if (focusNode.hasFocus) return;
+                              scrollController.animateTo(
+                                scrollController.position.maxScrollExtent,
+                                duration: const Duration(seconds: 2),
+                                curve: Curves.fastOutSlowIn,
+                              );
+                            },
+                            controller: textController,
+                            focusNode: focusNode,
+                            onTapOutside: (_) {
+                              focusNode.unfocus();
+                              scrollController.animateTo(
+                                0,
+                                duration: const Duration(seconds: 2),
+                                curve: Curves.fastOutSlowIn,
+                              );
+                            },
+                            style: const TextStyle(color: AppColors.dark),
+                            decoration: const InputDecoration(
+                              prefixIcon: Icon(
+                                Icons.search,
+                                color: AppColors.gray,
                               ),
-                              borderSide: BorderSide.none,
+                              suffixIcon: Icon(
+                                Icons.cancel,
+                                color: AppColors.gray,
+                              ),
+                              hintStyle: TextStyle(
+                                color: AppColors.gray,
+                              ),
+                              border: OutlineInputBorder(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(10)),
+                                  borderSide: BorderSide.none),
+                              hintText: 'Search',
+                              focusColor: AppColors.dark0,
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(10),
+                                ),
+                                borderSide: BorderSide.none,
+                              ),
                             ),
                           ),
                         ),
                       ),
-                    ),
-                  ],
-                ),
+                    ],
+                  ),
+                ],
               ),
             ],
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 50),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.start,
+        ),
+        backgroundColor: AppColors.primaryColor,
+        body: Stack(
+          alignment: Alignment.topCenter,
+          children: [
+            Column(
               children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Your English is',
-                      style: GoogleFonts.judson(
-                          color: AppColors.gray1, fontSize: 12),
+                Expanded(
+                  child: SingleChildScrollView(
+                    physics: const NeverScrollableScrollPhysics(),
+                    padding: EdgeInsets.only(
+                        bottom: MediaQuery.of(context).size.height * 0.58),
+                    controller: scrollController,
+                    child: Column(
+                      children: [
+                        Image.asset(
+                          AssetsPathHelper.castleImage,
+                          gaplessPlayback: true,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 50),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Your English is',
+                                    style: GoogleFonts.judson(
+                                        color: AppColors.gray1, fontSize: 12),
+                                  ),
+                                  const SizedBox(height: 5),
+                                  Text(
+                                    'Loading...',
+                                    style: GoogleFonts.akshar(
+                                        color: AppColors.gray1,
+                                        fontSize: 32,
+                                        letterSpacing: 1.6,
+                                        shadows: [
+                                          Shadow(
+                                              color: AppColors.dark0
+                                                  .withOpacity(0.25),
+                                              blurRadius: 4,
+                                              offset: const Offset(0, 4))
+                                        ]),
+                                  ),
+                                  const SizedBox(height: 10),
+                                  Text(
+                                    'AMAZING',
+                                    style: GoogleFonts.judson(
+                                        color: AppColors.gray1, fontSize: 12),
+                                  ),
+                                ],
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(top: 5),
+                                child: Image.asset(
+                                  AssetsPathHelper.tribe,
+                                  scale: 1.7,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
                     ),
-                    const SizedBox(height: 5),
-                    Text(
-                      'Loading...',
-                      style: GoogleFonts.akshar(
-                          color: AppColors.gray1,
-                          fontSize: 32,
-                          letterSpacing: 1.6,
-                          shadows: [
-                            Shadow(
-                                color: AppColors.dark0.withOpacity(0.25),
-                                blurRadius: 4,
-                                offset: const Offset(0, 4))
-                          ]),
-                    ),
-                    const SizedBox(height: 10),
-                    Text(
-                      'AMAZING',
-                      style: GoogleFonts.judson(
-                          color: AppColors.gray1, fontSize: 12),
-                    ),
-                  ],
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 5),
-                  child: Image.asset(
-                    AssetsPathHelper.tribe,
-                    scale: 1.7,
                   ),
                 ),
               ],
             ),
-          ),
-        ],
-      ),
-    );
+          ],
+        ));
   }
 }
