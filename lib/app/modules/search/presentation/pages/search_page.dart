@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../../../common/theme/app_colors.dart';
@@ -87,12 +89,16 @@ class _SearchPageState extends StateController<SearchPage, SearchController> {
                             ),
                             border: OutlineInputBorder(
                                 borderRadius:
-                                    BorderRadius.all(Radius.circular(10))),
-                            hintText: 'Search',
-                            focusedBorder: OutlineInputBorder(
-                                borderRadius:
                                     BorderRadius.all(Radius.circular(10)),
-                                borderSide: BorderSide(color: AppColors.gray)),
+                                borderSide: BorderSide.none),
+                            hintText: 'Search',
+                            focusColor: AppColors.dark0,
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(10),
+                              ),
+                              borderSide: BorderSide.none,
+                            ),
                           ),
                         ),
                       ),
