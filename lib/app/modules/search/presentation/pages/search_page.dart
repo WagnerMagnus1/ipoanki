@@ -40,82 +40,84 @@ class _SearchPageState extends StateController<SearchPage, SearchController> {
           toolbarHeight: 110,
           title: Stack(
             children: [
-              Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        'Ipoanki',
-                        textAlign: TextAlign.center,
-                        style: GoogleFonts.kanit(
-                            color: AppColors.light, fontSize: 20),
-                      ),
-                    ],
-                  ),
-                  Column(
-                    children: [
-                      const SizedBox(height: 15),
-                      FractionallySizedBox(
-                        widthFactor: 0.88,
-                        child: Container(
-                          decoration: BoxDecoration(
-                            border: Border.all(),
-                            borderRadius:
-                                const BorderRadius.all(Radius.circular(10)),
-                            color: AppColors.primaryColor,
-                          ),
-                          child: TextField(
-                            onTap: () {
-                              if (focusNode.hasFocus) return;
-                              scrollController.animateTo(
-                                scrollController.position.maxScrollExtent,
-                                duration: const Duration(seconds: 2),
-                                curve: Curves.fastOutSlowIn,
-                              );
-                            },
-                            controller: textController,
-                            focusNode: focusNode,
-                            onTapOutside: (_) {
-                              focusNode.unfocus();
-                              scrollController.animateTo(
-                                0,
-                                duration: const Duration(seconds: 2),
-                                curve: Curves.fastOutSlowIn,
-                              );
-                            },
-                            style: const TextStyle(color: AppColors.dark),
-                            decoration: const InputDecoration(
-                              prefixIcon: Icon(
-                                Icons.search,
-                                color: AppColors.gray,
-                              ),
-                              suffixIcon: Icon(
-                                Icons.cancel,
-                                color: AppColors.gray,
-                              ),
-                              hintStyle: TextStyle(
-                                color: AppColors.gray,
-                              ),
-                              border: OutlineInputBorder(
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(10)),
-                                  borderSide: BorderSide.none),
-                              hintText: 'Search',
-                              focusColor: AppColors.dark0,
-                              focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(10),
+              Center(
+                child: Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          'Ipoanki',
+                          textAlign: TextAlign.center,
+                          style: GoogleFonts.kanit(
+                              color: AppColors.light, fontSize: 20),
+                        ),
+                      ],
+                    ),
+                    Column(
+                      children: [
+                        const SizedBox(height: 15),
+                        FractionallySizedBox(
+                          widthFactor: 0.88,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              border: Border.all(),
+                              borderRadius:
+                                  const BorderRadius.all(Radius.circular(10)),
+                              color: AppColors.primaryColor,
+                            ),
+                            child: TextField(
+                              onTap: () {
+                                if (focusNode.hasFocus) return;
+                                scrollController.animateTo(
+                                  scrollController.position.maxScrollExtent,
+                                  duration: const Duration(seconds: 2),
+                                  curve: Curves.fastOutSlowIn,
+                                );
+                              },
+                              controller: textController,
+                              focusNode: focusNode,
+                              onTapOutside: (_) {
+                                focusNode.unfocus();
+                                scrollController.animateTo(
+                                  0,
+                                  duration: const Duration(seconds: 2),
+                                  curve: Curves.fastOutSlowIn,
+                                );
+                              },
+                              style: const TextStyle(color: AppColors.dark),
+                              decoration: const InputDecoration(
+                                prefixIcon: Icon(
+                                  Icons.search,
+                                  color: AppColors.gray,
                                 ),
-                                borderSide: BorderSide.none,
+                                suffixIcon: Icon(
+                                  Icons.cancel,
+                                  color: AppColors.gray,
+                                ),
+                                hintStyle: TextStyle(
+                                  color: AppColors.gray,
+                                ),
+                                border: OutlineInputBorder(
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(10)),
+                                    borderSide: BorderSide.none),
+                                hintText: 'Search',
+                                focusColor: AppColors.dark0,
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(10),
+                                  ),
+                                  borderSide: BorderSide.none,
+                                ),
                               ),
                             ),
                           ),
                         ),
-                      ),
-                    ],
-                  ),
-                ],
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ],
           ),

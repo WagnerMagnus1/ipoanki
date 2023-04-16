@@ -1,9 +1,18 @@
-import 'package:flutter_modular/flutter_modular.dart';
+import 'package:ipoanki/app/modules/search/domain/usecases/get_phrases_usecase.dart';
 
-class SearchController implements Disposable{
-  @override
-  void dispose() {
-    // TODO: implement dispose
+class SearchController {
+  final GetPhrasesUsecase getPhrasesUsecase;
+
+  SearchController({
+    required this.getPhrasesUsecase,
+  }) {
+    getPhrasesByWord();
   }
 
+  Future<void> getPhrasesByWord() async {
+    final response = await getPhrasesUsecase.call(word: 'car');
+    response.fold((l) => null, (listPhrases) {
+      final data = listPhrases;
+    });
+  }
 }
