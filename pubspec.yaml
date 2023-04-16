@@ -17,6 +17,15 @@ dependencies:
   animated_text_kit: 4.2.2
   google_fonts: 4.0.3
 
+  # web_scraper: 0.1.4
+  web_scraper:
+    # path: ../web_scraper
+    git:
+      url: https://github.com/tusharojha/web_scraper
+      ref: develop
+
+  fpdart: 0.5.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -30,7 +39,6 @@ flutter_icons:
   image_path_android: "assets/launcher/icon.png"
   adaptive_icon_background: "assets/launcher/background.png"
   adaptive_icon_foreground: "assets/launcher/foreground.png"
-
 
 flutter:
   uses-material-design: true
