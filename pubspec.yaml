@@ -16,15 +16,14 @@ dependencies:
   flutter_modular: 5.0.3
   animated_text_kit: 4.2.2
   google_fonts: 4.0.3
-
   # web_scraper: 0.1.4
   web_scraper:
     # path: ../web_scraper
     git:
       url: https://github.com/tusharojha/web_scraper
       ref: develop
-
   fpdart: 0.5.0
+  asuka: 2.0.2
 
 dev_dependencies:
   flutter_test:

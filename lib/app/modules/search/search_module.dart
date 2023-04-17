@@ -6,14 +6,21 @@ import 'package:ipoanki/app/modules/search/presentation/pages/search_controller.
 import 'package:ipoanki/app/modules/search/presentation/pages/search_page.dart';
 import 'package:web_scraper/web_scraper.dart';
 
+import '../../common/constants/constants.dart';
+import 'presentation/stores/search_store.dart';
+
 class SearchModule extends Module {
   @override
   List<Bind> get binds => [
-        Bind((i) => SearchController(getPhrasesUsecase: i())),
-        Bind((i) => GetPhrasesUsecase(repository: i())),
-        Bind((i) => SearchRepository(dataSource: i())),
-        Bind((i) => SearchDatasource(webScraper: i())),
-        Bind((i) => WebScraper('https://youglish.com')),
+        Bind.lazySingleton((i) => SearchController(
+              getPhrasesUsecase: i(),
+              store: i(),
+            )),
+        Bind.lazySingleton((i) => GetPhrasesUsecase(repository: i())),
+        Bind.lazySingleton((i) => SearchRepository(dataSource: i())),
+        Bind.lazySingleton((i) => SearchDatasource(webScraper: i())),
+        Bind.lazySingleton((i) => WebScraper(Constants.urlDomainToGetPhrases)),
+        Bind.lazySingleton((i) => SearchStore()),
       ];
 
   @override
