@@ -1,18 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:ipoanki/app/common/extensions/string_extension.dart';
-import 'package:ipoanki/app/common/theme/app_colors.dart';
+
+import '../../../../common/extensions/string_extension.dart';
+import '../../../../common/theme/app_colors.dart';
 
 class PhrasesListWidget extends StatelessWidget {
   String text;
   final String textToBold;
+  final bool showCircleAvatar;
+  final bool capitalizeAnyPhrasesByDefault;
 
   PhrasesListWidget({
     super.key,
     required this.text,
     required this.textToBold,
+    this.showCircleAvatar = false,
+    this.capitalizeAnyPhrasesByDefault = true,
   }) {
-    text = text.capitalize().replaceAll('/','').replaceAll('\\','');
+    if (capitalizeAnyPhrasesByDefault) {
+      text = text.capitalize().replaceAll('/', '').replaceAll('\\', '');
+    }
   }
 
   @override
@@ -40,7 +47,8 @@ class PhrasesListWidget extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Flexible(
-                child: Text.rich(TextSpan(
+                child: Text.rich(
+                  TextSpan(
                     children: text
                         .split(' ')
                         .map(
@@ -49,37 +57,44 @@ class PhrasesListWidget extends StatelessWidget {
                             style: GoogleFonts.crimsonPro().copyWith(
                                 fontSize: 16,
                                 color: AppColors.secondaryColor,
-                                fontWeight: e.toLowerCase().contains(textToBold.toLowerCase())
+                                fontWeight: e
+                                        .toLowerCase()
+                                        .contains(textToBold.toLowerCase())
                                     ? FontWeight.bold
                                     : FontWeight.normal),
                           ),
                         )
-                        .toList())),
-              ),
-              Container(
-                  margin: const EdgeInsets.only(left: 20),
-                  height: 38,
-                  width: 38,
-                  decoration: const BoxDecoration(
-                    color: AppColors.secondaryColor,
-                    borderRadius: BorderRadius.all(Radius.circular(20)),
-                    boxShadow: [
-                      BoxShadow(
-                        color: AppColors.elementText2,
-                        blurRadius: 20,
-                      )
-                    ],
+                        .toList(),
                   ),
-                  child: const Center(
-                    child: CircleAvatar(
-                      backgroundColor: AppColors.purple,
-                      radius: 15,
-                      child: Icon(
-                        Icons.link,
-                        color: AppColors.light,
-                      ),
+                ),
+              ),
+              Visibility(
+                visible: showCircleAvatar,
+                child: Container(
+                    margin: const EdgeInsets.only(left: 20),
+                    height: 38,
+                    width: 38,
+                    decoration: const BoxDecoration(
+                      color: AppColors.secondaryColor,
+                      borderRadius: BorderRadius.all(Radius.circular(20)),
+                      boxShadow: [
+                        BoxShadow(
+                          color: AppColors.elementText2,
+                          blurRadius: 20,
+                        )
+                      ],
                     ),
-                  ))
+                    child: const Center(
+                      child: CircleAvatar(
+                        backgroundColor: AppColors.purple,
+                        radius: 15,
+                        child: Icon(
+                          Icons.link,
+                          color: AppColors.light,
+                        ),
+                      ),
+                    )),
+              )
             ],
           ),
         ));

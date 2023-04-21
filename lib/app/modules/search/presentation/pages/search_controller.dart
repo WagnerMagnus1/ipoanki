@@ -1,6 +1,9 @@
+import 'package:flutter_modular/flutter_modular.dart';
 import 'package:ipoanki/app/common/helpers/debouncer_helper.dart';
+import 'package:ipoanki/app/modules/search/domain/entities/phrase_entity.dart';
 import 'package:ipoanki/app/modules/search/domain/usecases/get_phrases_usecase.dart';
 import 'package:ipoanki/app/modules/search/presentation/stores/search_store.dart';
+import 'package:ipoanki/app/modules/search/presentation/viewmodels/search_details_view_model.dart';
 
 class SearchController {
   final GetPhrasesUsecase getPhrasesUsecase;
@@ -35,5 +38,11 @@ class SearchController {
     });
     store.setSearch(word);
     store.setLoading(load: false);
+  }
+
+  void navigateToDetailsPage(PhraseEntity phrase) {
+    Modular.to.pushNamed('/search/details',
+        arguments: SearchDetailsViewModel(
+            phrase: phrase, word: store.value.lastWordSearched ?? ''));
   }
 }

@@ -1,16 +1,15 @@
-import 'package:asuka/asuka.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:ipoanki/app/modules/search/domain/entities/phrase_entity.dart';
-import 'package:ipoanki/app/modules/search/presentation/stores/search_store.dart';
-import '../../../../common/theme/app_colors.dart';
-import '../viewmodels/search_view_model.dart';
-import '../widgets/phrases_list_widget.dart';
-import 'search_controller.dart';
 
 import '../../../../common/helpers/assets_path_helper.dart';
+import '../../../../common/theme/app_colors.dart';
 import '../../../../common/widgets/state_controller.dart';
+import '../../domain/entities/phrase_entity.dart';
+import '../stores/search_store.dart';
+import '../viewmodels/search_view_model.dart';
+import '../widgets/phrases_list_widget.dart';
+import '../widgets/text_custom_widget.dart';
+import 'search_controller.dart';
 
 class SearchPage extends StatefulWidget {
   const SearchPage({super.key});
@@ -133,18 +132,13 @@ class _SearchPageState extends StateController<SearchPage, SearchController> {
                                 padding: const EdgeInsets.only(bottom: 20),
                                 child: GestureDetector(
                                   onTap: () async {
-                                    await Clipboard.setData(
-                                      ClipboardData(text: phrase.link),
-                                    );
-                                    Asuka.showSnackBar(const SnackBar(
-                                      content:
-                                          Text('Successfully copied text'),
-                                    ));
+                                    controller.navigateToDetailsPage(phrase);
                                   },
                                   child: PhrasesListWidget(
                                     text: phrase.phrase,
-                                    textToBold:
-                                        store.lastWordSearched ?? '',
+                                    textToBold: store.lastWordSearched ?? '',
+                                    showCircleAvatar: true,
+                                     capitalizeAnyPhrasesByDefault: true,
                                   ),
                                 ),
                               );
@@ -303,7 +297,9 @@ class SearchStatusHeaderWidget extends StatelessWidget {
             children: [
               Flexible(
                 child: Text(
-                  listPhrases.isNotEmpty ? 'You searched by' : 'Your English is',
+                  listPhrases.isNotEmpty
+                      ? 'You searched by'
+                      : 'Your English is',
                   style: GoogleFonts.judson(
                     color: AppColors.gray1,
                     fontSize: 12,
@@ -313,26 +309,10 @@ class SearchStatusHeaderWidget extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 5),
-          Row(
-            children: [
-              Flexible(
-                child: Text(
-                  !loading && listPhrases.isNotEmpty
-                      ? '“$lastWordSearched“'
-                      : message ?? 'Loading...',
-                  style: GoogleFonts.akshar(
-                      color: AppColors.gray1,
-                      fontSize: 32,
-                      letterSpacing: 1.6,
-                      shadows: [
-                        Shadow(
-                            color: AppColors.dark0.withOpacity(0.25),
-                            blurRadius: 4,
-                            offset: const Offset(0, 4))
-                      ]),
-                ),
-              ),
-            ],
+          TextCustomWidget(
+            text: !loading && listPhrases.isNotEmpty
+                ? '“$lastWordSearched“'
+                : message ?? 'Loading...',
           ),
           const SizedBox(height: 10),
           Visibility(

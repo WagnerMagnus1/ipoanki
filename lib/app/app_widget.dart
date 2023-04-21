@@ -10,22 +10,16 @@ class AppWidget extends StatelessWidget {
     return MaterialApp.router(
       builder: Asuka.builder,
       debugShowCheckedModeBanner: false,
-      title: 'Base App',
+      title: 'Ipoanki',
       routeInformationParser: Modular.routeInformationParser,
       routerDelegate: Modular.routerDelegate,
       theme: ThemeData(
         brightness: Brightness.light,
-        /* light theme settings */
       ),
       darkTheme: ThemeData(
         brightness: Brightness.dark,
-        /* dark theme settings */
       ),
       themeMode: ThemeMode.dark,
-      /* ThemeMode.system to follow system theme, 
-         ThemeMode.light for light theme, 
-         ThemeMode.dark for dark theme
-      */
     );
   }
 }

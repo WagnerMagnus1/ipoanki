@@ -5,11 +5,4 @@ class PhraseModel extends PhraseEntity {
     required super.link,
     required super.phrase,
   });
-
-  factory PhraseModel.fromJson(Map<String, dynamic> json) {
-    return PhraseModel(
-      phrase: json['json'],
-      link: json['json'],
-    );
-  }
 }
