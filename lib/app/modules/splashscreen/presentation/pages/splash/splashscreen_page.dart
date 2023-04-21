@@ -39,11 +39,14 @@ class SplashscreenPageState
   Future init() async {
     await Future.delayed(const Duration(milliseconds: 2500));
     await animationController.forward();
-    Future.wait([
-      precacheImage(const AssetImage(AssetsPathHelper.castleImage), context),
-    ]).then((value) {
+    Future.wait([loadImageBackground()]).then((value) {
       controller.navigateToSearch();
     });
+  }
+
+  Future<void> loadImageBackground() async {
+    await precacheImage(
+        const AssetImage(AssetsPathHelper.castleImage), context);
   }
 
   @override
