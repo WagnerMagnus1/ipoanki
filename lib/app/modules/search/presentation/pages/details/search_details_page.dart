@@ -47,6 +47,7 @@ class _SearchDetailsPageState
           ),
         ),
         elevation: 0,
+        centerTitle: true,
         title: Text(
           widget.searchDetailsViewModel.word.capitalize(),
           textAlign: TextAlign.center,
