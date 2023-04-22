@@ -30,11 +30,9 @@ class SearchController {
   }) async {
     final response = await getPhrasesUsecase.call(word: word);
     response.fold((l) {
-      print(l);
       store.setMessage('Ops! Server currently unreachable');
       store.cleanListPhrases();
     }, (listPhrases) {
-      print(listPhrases);
       if (listPhrases.isEmpty) store.setMessage('Ops! \nNo result found :(');
       store.setListPhrases(listPhrases);
     });

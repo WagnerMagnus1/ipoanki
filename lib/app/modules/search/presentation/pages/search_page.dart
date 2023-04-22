@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 import '../../../../common/helpers/assets_path_helper.dart';
 import '../../../../common/theme/app_colors.dart';
+import '../../../../common/widgets/loading_widget.dart';
 import '../../../../common/widgets/state_controller.dart';
 import '../../domain/entities/phrase_entity.dart';
 import '../stores/search_store.dart';
@@ -131,42 +133,38 @@ class _SearchPageState extends StateController<SearchPage, SearchController>
             Align(
               alignment: Alignment.bottomCenter,
               child: FractionallySizedBox(
-                // heightFactor: animationSerchBar2.value,
                 heightFactor:
                     MediaQuery.of(context).viewInsets.bottom == 0 ? 0.58 : 0.32,
                 child: ValueListenableBuilder(
                     valueListenable: controller.store,
                     builder: (context, store, _) {
-                      return Visibility(
-                        visible: !store.loading,
-                        child: ListView.builder(
-                            primary: true,
-                            shrinkWrap: true,
-                            padding: const EdgeInsets.only(
-                              top: 20,
-                              left: 24,
-                              right: 24,
-                              bottom: 50,
-                            ),
-                            itemCount: store.listPhrases.length,
-                            itemBuilder: (context, index) {
-                              final phrase = store.listPhrases[index];
-                              return Padding(
-                                padding: const EdgeInsets.only(bottom: 20),
-                                child: GestureDetector(
-                                  onTap: () async {
-                                    controller.navigateToDetailsPage(phrase);
-                                  },
-                                  child: PhrasesListWidget(
-                                    text: phrase.phrase,
-                                    textToBold: store.lastWordSearched ?? '',
-                                    showCircleAvatar: true,
-                                    capitalizeAnyPhrasesByDefault: true,
-                                  ),
+                      return ListView.builder(
+                          primary: true,
+                          shrinkWrap: true,
+                          padding: const EdgeInsets.only(
+                            top: 20,
+                            left: 24,
+                            right: 24,
+                            bottom: 50,
+                          ),
+                          itemCount: store.listPhrases.length,
+                          itemBuilder: (context, index) {
+                            final phrase = store.listPhrases[index];
+                            return Padding(
+                              padding: const EdgeInsets.only(bottom: 20),
+                              child: GestureDetector(
+                                onTap: () async {
+                                  controller.navigateToDetailsPage(phrase);
+                                },
+                                child: PhrasesListWidget(
+                                  text: phrase.phrase,
+                                  textToBold: store.lastWordSearched ?? '',
+                                  showCircleAvatar: true,
+                                  capitalizeAnyPhrasesByDefault: true,
                                 ),
-                              );
-                            }),
-                      );
+                              ),
+                            );
+                          });
                     }),
               ),
             ),
@@ -338,10 +336,17 @@ class SearchStatusHeaderWidget extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 5),
-          TextCustomWidget(
-            text: !loading && listPhrases.isNotEmpty
-                ? '“$lastWordSearched“'
-                : message ?? 'Loading...',
+          Visibility(
+            visible: !loading,
+            child: TextCustomWidget(
+              text: listPhrases.isNotEmpty
+                  ? '“$lastWordSearched“'
+                  : (message ?? 'Loading...'),
+            ),
+          ),
+          Visibility(
+            visible: loading,
+            child: const LoadingWidget(),
           ),
           const SizedBox(height: 10),
           Visibility(
