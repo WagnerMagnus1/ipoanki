@@ -28,6 +28,6 @@ class SearchStore extends ValueNotifier<SearchViewModel> {
   }
 
   void setMessage(String? message) {
-    value = value.copyWith(message: message);
+    value =value.copyWith(message: message);
   }
 }

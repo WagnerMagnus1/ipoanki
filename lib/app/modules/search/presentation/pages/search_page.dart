@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 import '../../../../common/helpers/assets_path_helper.dart';
 import '../../../../common/theme/app_colors.dart';
+import '../../../../common/widgets/loading_widget.dart';
 import '../../../../common/widgets/state_controller.dart';
 import '../../domain/entities/phrase_entity.dart';
 import '../stores/search_store.dart';
@@ -18,19 +20,38 @@ class SearchPage extends StatefulWidget {
   State<SearchPage> createState() => _SearchPageState();
 }
 
-class _SearchPageState extends StateController<SearchPage, SearchController> {
+class _SearchPageState extends StateController<SearchPage, SearchController>
+    with SingleTickerProviderStateMixin {
   late TextEditingController textController;
-  final FocusNode focusNode = FocusNode();
-  final ScrollController scrollController = ScrollController();
+  late FocusNode focusNode;
+  late ScrollController scrollController;
+  late Animation<double> animationSerchBar;
+  late AnimationController controllerAnimationSerchBar;
   @override
   void initState() {
     super.initState();
     textController = TextEditingController();
+    focusNode = FocusNode();
+    scrollController = ScrollController();
+    createAnimationToSearchBar();
+  }
+
+  void createAnimationToSearchBar() {
+    controllerAnimationSerchBar =
+        AnimationController(duration: const Duration(seconds: 1), vsync: this);
+    animationSerchBar = Tween<double>(begin: 0.88, end: 0.98)
+        .animate(controllerAnimationSerchBar)
+      ..addListener(() {
+        setState(() {});
+      });
   }
 
   @override
   void dispose() {
     textController.dispose();
+    focusNode.dispose();
+    scrollController.dispose();
+    controllerAnimationSerchBar.dispose();
     super.dispose();
   }
 
@@ -52,6 +73,8 @@ class _SearchPageState extends StateController<SearchPage, SearchController> {
                   millisecondsToScrollAnimated: 1200,
                   textController: textController,
                   searchStore: controller.store,
+                  animation: animationSerchBar,
+                  animationController: controllerAnimationSerchBar,
                 ),
               ),
             ],
@@ -110,40 +133,38 @@ class _SearchPageState extends StateController<SearchPage, SearchController> {
             Align(
               alignment: Alignment.bottomCenter,
               child: FractionallySizedBox(
-                heightFactor: 0.58,
+                heightFactor:
+                    MediaQuery.of(context).viewInsets.bottom == 0 ? 0.58 : 0.32,
                 child: ValueListenableBuilder(
                     valueListenable: controller.store,
                     builder: (context, store, _) {
-                      return Visibility(
-                        visible: !store.loading,
-                        child: ListView.builder(
-                            primary: true,
-                            shrinkWrap: true,
-                            padding: const EdgeInsets.only(
-                              top: 30,
-                              left: 24,
-                              right: 24,
-                              bottom: 50,
-                            ),
-                            itemCount: store.listPhrases.length,
-                            itemBuilder: (context, index) {
-                              final phrase = store.listPhrases[index];
-                              return Padding(
-                                padding: const EdgeInsets.only(bottom: 20),
-                                child: GestureDetector(
-                                  onTap: () async {
-                                    controller.navigateToDetailsPage(phrase);
-                                  },
-                                  child: PhrasesListWidget(
-                                    text: phrase.phrase,
-                                    textToBold: store.lastWordSearched ?? '',
-                                    showCircleAvatar: true,
-                                     capitalizeAnyPhrasesByDefault: true,
-                                  ),
+                      return ListView.builder(
+                          primary: true,
+                          shrinkWrap: true,
+                          padding: const EdgeInsets.only(
+                            top: 20,
+                            left: 24,
+                            right: 24,
+                            bottom: 50,
+                          ),
+                          itemCount: store.listPhrases.length,
+                          itemBuilder: (context, index) {
+                            final phrase = store.listPhrases[index];
+                            return Padding(
+                              padding: const EdgeInsets.only(bottom: 20),
+                              child: GestureDetector(
+                                onTap: () async {
+                                  controller.navigateToDetailsPage(phrase);
+                                },
+                                child: PhrasesListWidget(
+                                  text: phrase.phrase,
+                                  textToBold: store.lastWordSearched ?? '',
+                                  showCircleAvatar: true,
+                                  capitalizeAnyPhrasesByDefault: true,
                                 ),
-                              );
-                            }),
-                      );
+                              ),
+                            );
+                          });
                     }),
               ),
             ),
@@ -155,6 +176,8 @@ class _SearchPageState extends StateController<SearchPage, SearchController> {
 class SearchBarInputWidget extends StatelessWidget {
   final void Function(String)? onChanged;
   final SearchStore searchStore;
+  final Animation<double> animation;
+  final AnimationController animationController;
 
   const SearchBarInputWidget({
     super.key,
@@ -164,6 +187,8 @@ class SearchBarInputWidget extends StatelessWidget {
     required this.scrollController,
     required this.millisecondsToScrollAnimated,
     required this.textController,
+    required this.animation,
+    required this.animationController,
   });
 
   final FocusNode focusNode;
@@ -189,7 +214,7 @@ class SearchBarInputWidget extends StatelessWidget {
           children: [
             const SizedBox(height: 15),
             FractionallySizedBox(
-              widthFactor: 0.88,
+              widthFactor: animation.value,
               child: Container(
                 decoration: BoxDecoration(
                   border: Border.all(),
@@ -209,6 +234,7 @@ class SearchBarInputWidget extends StatelessWidget {
                           Duration(milliseconds: millisecondsToScrollAnimated),
                       curve: Curves.fastOutSlowIn,
                     );
+                    animationController.forward();
                   },
                   controller: textController,
                   focusNode: focusNode,
@@ -223,6 +249,7 @@ class SearchBarInputWidget extends StatelessWidget {
                           Duration(milliseconds: millisecondsToScrollAnimated),
                       curve: Curves.fastOutSlowIn,
                     );
+                    animationController.reverse();
                   },
                   style: const TextStyle(color: AppColors.dark),
                   decoration: InputDecoration(
@@ -309,10 +336,17 @@ class SearchStatusHeaderWidget extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 5),
-          TextCustomWidget(
-            text: !loading && listPhrases.isNotEmpty
-                ? '“$lastWordSearched“'
-                : message ?? 'Loading...',
+          Visibility(
+            visible: !loading,
+            child: TextCustomWidget(
+              text: listPhrases.isNotEmpty
+                  ? '“$lastWordSearched“'
+                  : (message ?? 'Loading...'),
+            ),
+          ),
+          Visibility(
+            visible: loading,
+            child: const LoadingWidget(),
           ),
           const SizedBox(height: 10),
           Visibility(

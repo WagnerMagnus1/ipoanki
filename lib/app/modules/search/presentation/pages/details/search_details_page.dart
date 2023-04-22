@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:ipoanki/app/modules/search/presentation/widgets/phrases_list_widget.dart';
 import '../../../../../common/extensions/string_extension.dart';
 import '../../../../../common/theme/app_colors.dart';
+import '../../../../../common/widgets/loading_widget.dart';
 import '../../../../../common/widgets/state_controller.dart';
 import '../../viewmodels/search_details_view_model.dart';
 import '../../widgets/text_custom_widget.dart';
@@ -47,6 +48,7 @@ class _SearchDetailsPageState
           ),
         ),
         elevation: 0,
+        centerTitle: true,
         title: Text(
           widget.searchDetailsViewModel.word.capitalize(),
           textAlign: TextAlign.center,
@@ -92,10 +94,6 @@ class _SearchDetailsPageState
               ),
             ),
             const SizedBox(height: 50),
-            const TextCustomWidget(
-              text: 'Back:',
-            ),
-            const SizedBox(height: 10),
             ValueListenableBuilder(
               valueListenable: controller.searchDetailsStore,
               builder: (context, searchDetailsStore, _) {
@@ -105,6 +103,9 @@ class _SearchDetailsPageState
                     text: searchDetailsStore.message.toString(),
                     textToBold: searchDetailsStore.message.toString(),
                   );
+                }
+                if (searchDetailsStore.loading) {
+                  return const Center(child: LoadingWidget());
                 }
                 return Visibility(
                   visible: searchDetailsStore.dictionaryEntity != null &&
@@ -129,13 +130,21 @@ class _SearchDetailsPageState
                         ),
                       ));
                     },
-                    child: PhrasesListWidget(
-                      text: searchDetailsStore.formattedComplementSentence(
-                        widget.searchDetailsViewModel,
-                      ),
-                      textToBold: widget.searchDetailsViewModel.word,
-                      showCircleAvatar: false,
-                      capitalizeAnyPhrasesByDefault: false,
+                    child: Column(
+                      children: [
+                        const TextCustomWidget(
+                          text: 'Back:',
+                        ),
+                        const SizedBox(height: 10),
+                        PhrasesListWidget(
+                          text: searchDetailsStore.formattedComplementSentence(
+                            widget.searchDetailsViewModel,
+                          ),
+                          textToBold: widget.searchDetailsViewModel.word,
+                          showCircleAvatar: false,
+                          capitalizeAnyPhrasesByDefault: false,
+                        ),
+                      ],
                     ),
                   ),
                 );
