@@ -18,7 +18,7 @@ Free app to find English terms/words and improve your study experience
 </div>
 
 <p align="center">
-  <img src="./screenshots/ipoanki.png" alt="banner" />
+  <img src="./screenshots/ipoankishot.png" alt="banner" />
 </p>
 
 ## What is this ?
