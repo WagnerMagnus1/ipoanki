@@ -1,0 +1,6 @@
+## 1.0.0
+
+* List of phrases according to the searched word
+* Meaning of the word and other examples
+* Text copy when clicking on the card
+* Link to view and listen to selected phrase

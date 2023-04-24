@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "66755345540",
+    "project_id": "ipoanki",
+    "storage_bucket": "ipoanki.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:66755345540:android:a3df8a10fc44c1c4a056d1",
+        "android_client_info": {
+          "package_name": "com.company.ipoanki"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "66755345540-29s1mbbvaft0kurnkri1ap381u1pj0vs.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.company.ipoanki",
+            "certificate_hash": "b3855ad10160968d0943efea4df9d8479d6a63bd"
+          }
+        },
+        {
+          "client_id": "66755345540-tdphltptpcpl6priaostp2g8h8o5718g.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAe1ovvp2kiaGKoUtMVCAHQ6HHVLjYNZo0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "66755345540-tdphltptpcpl6priaostp2g8h8o5718g.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

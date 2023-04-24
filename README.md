@@ -35,6 +35,11 @@ returns meanings and other example sentences.
 - Press cards to copy their contents
 - Access the text link to hear the chosen term with video and audio
 
+## Download
+
+[Become a Tester](https://appdistribution.firebase.dev/i/6b78e9a7d8d8d468)
+
+[Download the App](https://github.com/WagnerMagnus1/ipoanki/releases)
 
 ## Development Process
 

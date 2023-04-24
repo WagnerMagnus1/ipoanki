@@ -1,4 +1,4 @@
-package com.example.ipoanki
+package com.company.ipoanki
 
 import io.flutter.embedding.android.FlutterActivity
 
