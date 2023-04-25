@@ -224,6 +224,7 @@ class SearchBarInputWidget extends StatelessWidget {
                 child: TextField(
                   onChanged: onChanged,
                   onTap: () {
+                    animationController.forward();
                     if (focusNode.hasFocus ||
                         searchStore.value.listPhrases.isNotEmpty) {
                       return;
@@ -234,11 +235,11 @@ class SearchBarInputWidget extends StatelessWidget {
                           Duration(milliseconds: millisecondsToScrollAnimated),
                       curve: Curves.fastOutSlowIn,
                     );
-                    animationController.forward();
                   },
                   controller: textController,
                   focusNode: focusNode,
                   onTapOutside: (_) {
+                    animationController.reverse();
                     focusNode.unfocus();
                     if (searchStore.value.listPhrases.isNotEmpty) {
                       return;
@@ -249,7 +250,6 @@ class SearchBarInputWidget extends StatelessWidget {
                           Duration(milliseconds: millisecondsToScrollAnimated),
                       curve: Curves.fastOutSlowIn,
                     );
-                    animationController.reverse();
                   },
                   style: const TextStyle(color: AppColors.dark),
                   decoration: InputDecoration(

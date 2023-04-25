@@ -46,7 +46,7 @@ class SearchDatasource implements ISearchDataSource {
       var phrase = expressionToGetPhrase.firstMatch(text)?[0];
       var id = expressionToGetPhraseId.firstMatch(text)?[0];
       if (phrase != null && id != null) {
-        final link = 'https://youglish.com/getbyid/$id/$wordSearched/english';
+        final link = 'https://youglish.com/getbyid/$id/$wordSearched/english/us?';
         listPhraseModel.add(PhraseModel(
           phrase: phrase,
           link: link,
