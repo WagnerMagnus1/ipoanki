@@ -20,7 +20,7 @@ class SearchDetailsController {
     final result = await dictionaryEnglishUsecase.call(word: word);
     searchDetailsStore.setLoading(load: false);
     result.fold((error) {
-      searchDetailsStore.setMessage(error);
+      searchDetailsStore.setMessage('Ops! \nNo meaning result found :(');
     }, (dictionary) {
       searchDetailsStore.setMessage(null);
       searchDetailsStore.setDictionary(dictionary);
