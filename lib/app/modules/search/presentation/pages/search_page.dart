@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 import '../../../../common/helpers/assets_path_helper.dart';
 import '../../../../common/theme/app_colors.dart';
@@ -27,6 +26,7 @@ class _SearchPageState extends StateController<SearchPage, SearchController>
   late ScrollController scrollController;
   late Animation<double> animationSerchBar;
   late AnimationController controllerAnimationSerchBar;
+
   @override
   void initState() {
     super.initState();
@@ -84,92 +84,129 @@ class _SearchPageState extends StateController<SearchPage, SearchController>
         body: Stack(
           alignment: Alignment.topCenter,
           children: [
-            Column(
-              children: [
-                Expanded(
-                  child: SingleChildScrollView(
-                    physics: const NeverScrollableScrollPhysics(),
-                    padding: EdgeInsets.only(
-                        bottom: MediaQuery.of(context).size.height * 0.58),
-                    controller: scrollController,
-                    child: Column(
-                      children: [
-                        Image.asset(
-                          AssetsPathHelper.castleImage,
-                          gaplessPlayback: true,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 50),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              ValueListenableBuilder(
-                                  valueListenable: controller.store,
-                                  builder: (context, store, _) {
-                                    return SearchStatusHeaderWidget(
-                                      listPhrases: store.listPhrases,
-                                      loading: store.loading,
-                                      lastWordSearched: store.lastWordSearched,
-                                      message: store.message,
-                                    );
-                                  }),
-                              Padding(
-                                padding: const EdgeInsets.only(top: 5),
-                                child: Image.asset(
-                                  AssetsPathHelper.tribe,
-                                  scale: 1.7,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
+            BackgroundSearchPageWidget(
+              scrollController: scrollController,
+              valueListenable: controller.store,
             ),
             Align(
               alignment: Alignment.bottomCenter,
-              child: FractionallySizedBox(
-                heightFactor:
-                    MediaQuery.of(context).viewInsets.bottom == 0 ? 0.58 : 0.32,
-                child: ValueListenableBuilder(
-                    valueListenable: controller.store,
-                    builder: (context, store, _) {
-                      return ListView.builder(
-                          primary: true,
-                          shrinkWrap: true,
-                          padding: const EdgeInsets.only(
-                            top: 20,
-                            left: 24,
-                            right: 24,
-                            bottom: 50,
-                          ),
-                          itemCount: store.listPhrases.length,
-                          itemBuilder: (context, index) {
-                            final phrase = store.listPhrases[index];
-                            return Padding(
-                              padding: const EdgeInsets.only(bottom: 20),
-                              child: GestureDetector(
-                                onTap: () async {
-                                  controller.navigateToDetailsPage(phrase);
-                                },
-                                child: PhrasesListWidget(
-                                  text: phrase.phrase,
-                                  textToBold: store.lastWordSearched ?? '',
-                                  showCircleAvatar: true,
-                                  capitalizeAnyPhrasesByDefault: true,
-                                ),
-                              ),
-                            );
-                          });
-                    }),
+              child: ListPhrasesBodyWidget(
+                onTapPhrase: controller.navigateToDetailsPage,
+                valueListenable: controller.store,
               ),
             ),
           ],
         ));
+  }
+}
+
+class BackgroundSearchPageWidget extends StatelessWidget {
+  const BackgroundSearchPageWidget({
+    super.key,
+    required this.scrollController,
+    required this.valueListenable,
+  });
+
+  final ScrollController scrollController;
+  final ValueNotifier<SearchViewModel> valueListenable;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Expanded(
+          child: SingleChildScrollView(
+            physics: const NeverScrollableScrollPhysics(),
+            padding: EdgeInsets.only(
+                bottom: MediaQuery.of(context).size.height * 0.58),
+            controller: scrollController,
+            child: Column(
+              children: [
+                Image.asset(
+                  AssetsPathHelper.castleImage,
+                  gaplessPlayback: true,
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 50),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      ValueListenableBuilder(
+                          valueListenable: valueListenable,
+                          builder: (context, store, _) {
+                            return SearchStatusHeaderWidget(
+                              listPhrases: store.listPhrases,
+                              loading: store.loading,
+                              lastWordSearched: store.lastWordSearched,
+                              message: store.message,
+                            );
+                          }),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 5),
+                        child: Image.asset(
+                          AssetsPathHelper.tribe,
+                          scale: 1.7,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class ListPhrasesBodyWidget extends StatelessWidget {
+  const ListPhrasesBodyWidget({
+    super.key,
+    required this.valueListenable,
+    required this.onTapPhrase,
+  });
+
+  final ValueNotifier<SearchViewModel> valueListenable;
+  final Function(PhraseEntity phraseEntity) onTapPhrase;
+
+  @override
+  Widget build(BuildContext context) {
+    return FractionallySizedBox(
+      heightFactor: MediaQuery.of(context).viewInsets.bottom == 0 ? 0.58 : 0.32,
+      child: ValueListenableBuilder(
+          valueListenable: valueListenable,
+          builder: (context, store, _) {
+            return ListView.builder(
+                primary: true,
+                shrinkWrap: true,
+                padding: const EdgeInsets.only(
+                  top: 20,
+                  left: 24,
+                  right: 24,
+                  bottom: 50,
+                ),
+                itemCount: store.listPhrases.length,
+                itemBuilder: (context, index) {
+                  final phrase = store.listPhrases[index];
+                  return Padding(
+                    padding: const EdgeInsets.only(bottom: 20),
+                    child: GestureDetector(
+                      onTap: () async {
+                        onTapPhrase(phrase);
+                      },
+                      child: PhrasesListWidget(
+                        text: phrase.phrase,
+                        textToBold: store.lastWordSearched ?? '',
+                        showCircleAvatar: true,
+                        capitalizeAnyPhrasesByDefault: true,
+                      ),
+                    ),
+                  );
+                });
+          }),
+    );
   }
 }
 
@@ -210,90 +247,85 @@ class SearchBarInputWidget extends StatelessWidget {
             ),
           ],
         ),
-        Column(
-          children: [
-            const SizedBox(height: 15),
-            FractionallySizedBox(
-              widthFactor: animation.value,
-              child: Container(
-                decoration: BoxDecoration(
-                  border: Border.all(),
-                  borderRadius: const BorderRadius.all(Radius.circular(10)),
-                  color: AppColors.primaryColor,
+        FractionallySizedBox(
+          widthFactor: animation.value,
+          child: Container(
+            margin: const EdgeInsetsDirectional.only(top: 15),
+            decoration: BoxDecoration(
+              border: Border.all(),
+              borderRadius: const BorderRadius.all(Radius.circular(10)),
+              color: AppColors.primaryColor,
+            ),
+            child: TextField(
+              onChanged: onChanged,
+              onTap: () {
+                animationController.forward();
+                if (focusNode.hasFocus ||
+                    searchStore.value.listPhrases.isNotEmpty) {
+                  return;
+                }
+                scrollController.animateTo(
+                  scrollController.position.maxScrollExtent,
+                  duration:
+                      Duration(milliseconds: millisecondsToScrollAnimated),
+                  curve: Curves.fastOutSlowIn,
+                );
+              },
+              controller: textController,
+              focusNode: focusNode,
+              onTapOutside: (_) {
+                animationController.reverse();
+                focusNode.unfocus();
+                if (searchStore.value.listPhrases.isNotEmpty) {
+                  return;
+                }
+                scrollController.animateTo(
+                  0,
+                  duration:
+                      Duration(milliseconds: millisecondsToScrollAnimated),
+                  curve: Curves.fastOutSlowIn,
+                );
+              },
+              style: const TextStyle(color: AppColors.dark),
+              decoration: InputDecoration(
+                prefixIcon: const Icon(
+                  Icons.search,
+                  color: AppColors.gray,
                 ),
-                child: TextField(
-                  onChanged: onChanged,
-                  onTap: () {
-                    animationController.forward();
-                    if (focusNode.hasFocus ||
-                        searchStore.value.listPhrases.isNotEmpty) {
-                      return;
-                    }
-                    scrollController.animateTo(
-                      scrollController.position.maxScrollExtent,
-                      duration:
-                          Duration(milliseconds: millisecondsToScrollAnimated),
-                      curve: Curves.fastOutSlowIn,
-                    );
-                  },
-                  controller: textController,
-                  focusNode: focusNode,
-                  onTapOutside: (_) {
-                    animationController.reverse();
-                    focusNode.unfocus();
-                    if (searchStore.value.listPhrases.isNotEmpty) {
-                      return;
-                    }
-                    scrollController.animateTo(
-                      0,
-                      duration:
-                          Duration(milliseconds: millisecondsToScrollAnimated),
-                      curve: Curves.fastOutSlowIn,
-                    );
-                  },
-                  style: const TextStyle(color: AppColors.dark),
-                  decoration: InputDecoration(
-                    prefixIcon: const Icon(
-                      Icons.search,
-                      color: AppColors.gray,
-                    ),
-                    suffixIcon: ValueListenableBuilder<SearchViewModel>(
-                        valueListenable: searchStore,
-                        builder: (context, store, _) {
-                          return Visibility(
-                            visible:
-                                searchStore.value.showButtonCloseFromSearchBar,
-                            child: IconButton(
-                              icon: const Icon(Icons.cancel),
-                              onPressed: () {
-                                textController.text = '';
-                                searchStore.showButtonSearchBar(
-                                  isShowButton: false,
-                                );
-                              },
-                              color: AppColors.gray,
-                            ),
-                          );
-                        }),
-                    hintStyle: const TextStyle(
-                      color: AppColors.gray,
-                    ),
-                    border: const OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(10)),
-                        borderSide: BorderSide.none),
-                    hintText: 'Search',
-                    focusColor: AppColors.dark0,
-                    focusedBorder: const OutlineInputBorder(
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(10),
-                      ),
-                      borderSide: BorderSide.none,
-                    ),
+                suffixIcon: ValueListenableBuilder<SearchViewModel>(
+                    valueListenable: searchStore,
+                    builder: (context, store, _) {
+                      return Visibility(
+                        visible: searchStore.value.showButtonCloseFromSearchBar,
+                        child: IconButton(
+                          icon: const Icon(Icons.cancel),
+                          onPressed: () {
+                            textController.text = '';
+                            searchStore.showButtonSearchBar(
+                              isShowButton: false,
+                            );
+                          },
+                          color: AppColors.gray,
+                        ),
+                      );
+                    }),
+                hintStyle: const TextStyle(
+                  color: AppColors.gray,
+                ),
+                border: const OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(10)),
+                    borderSide: BorderSide.none),
+                hintText: 'Search',
+                focusColor: AppColors.dark0,
+                focusedBorder: const OutlineInputBorder(
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(10),
                   ),
+                  borderSide: BorderSide.none,
                 ),
               ),
             ),
-          ],
+          ),
         ),
       ],
     );

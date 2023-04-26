@@ -1,8 +1,7 @@
-import 'package:asuka/asuka.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:ipoanki/app/modules/search/presentation/widgets/phrases_list_widget.dart';
+import '../../../../../common/widgets/copy_text_widget.dart';
+import '../../widgets/phrases_list_widget.dart';
 import '../../../../../common/extensions/string_extension.dart';
 import '../../../../../common/theme/app_colors.dart';
 import '../../../../../common/widgets/loading_widget.dart';
@@ -68,26 +67,10 @@ class _SearchDetailsPageState
               text: 'Front:',
             ),
             const SizedBox(height: 10),
-            GestureDetector(
-              onTap: () async {
-                await Clipboard.setData(
-                  ClipboardData(
-                    text: widget.searchDetailsViewModel.phrase.phrase
-                        .replaceAll("\\'", "'")
-                        .capitalize(),
-                  ),
-                );
-                Asuka.showSnackBar(SnackBar(
-                  backgroundColor: AppColors.secondaryColor,
-                  content: Text(
-                    'Successfully copied text!',
-                    style: GoogleFonts.judson().copyWith(
-                      color: AppColors.light,
-                      fontSize: 18,
-                    ),
-                  ),
-                ));
-              },
+            CopyTextWidget(
+              text: widget.searchDetailsViewModel.phrase.phrase
+                  .replaceAll("\\'", "'")
+                  .capitalize(),
               child: PhrasesListWidget(
                 text: widget.searchDetailsViewModel.phrase.phrase,
                 textToBold: widget.searchDetailsViewModel.word,
@@ -110,26 +93,10 @@ class _SearchDetailsPageState
                 return Visibility(
                   visible: searchDetailsStore.dictionaryEntity != null &&
                       !searchDetailsStore.loading,
-                  child: GestureDetector(
-                    onTap: () async {
-                      await Clipboard.setData(
-                        ClipboardData(
-                          text: searchDetailsStore.formattedComplementSentence(
-                            widget.searchDetailsViewModel,
-                          ),
-                        ),
-                      );
-                      Asuka.showSnackBar(SnackBar(
-                        backgroundColor: AppColors.secondaryColor,
-                        content: Text(
-                          'Successfully copied text!',
-                          style: GoogleFonts.judson().copyWith(
-                            color: AppColors.light,
-                            fontSize: 18,
-                          ),
-                        ),
-                      ));
-                    },
+                  child: CopyTextWidget(
+                    text: searchDetailsStore.formattedComplementSentence(
+                      widget.searchDetailsViewModel,
+                    ),
                     child: Column(
                       children: [
                         const TextCustomWidget(
