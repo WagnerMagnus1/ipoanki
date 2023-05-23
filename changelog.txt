@@ -1,4 +1,4 @@
-## 1.0.0
+## 1.0.1
 
 * List of phrases according to the searched word
 * Meaning of the word and other examples
